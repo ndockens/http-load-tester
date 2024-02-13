@@ -2,7 +2,7 @@ using System.Net;
 
 namespace HttpLoadTester;
 
-public class LoadTester
+public class LoadTester : ILoadTester
 {
     public async Task<HttpStatusCode> SendGet(string uri)
     {
