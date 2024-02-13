@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HttpLoadTester\HttpLoadTester.csproj" />
+  </ItemGroup>
+
 </Project>
