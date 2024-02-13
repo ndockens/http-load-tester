@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLoadTester", "HttpLoadT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLoadTester.Tests.Integration", "HttpLoadTester.Tests.Integration\HttpLoadTester.Tests.Integration.csproj", "{1724D987-FB09-4D6A-8D2F-80729AFDC636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLoadTester.TestApi", "HttpLoadTester.TestApi\HttpLoadTester.TestApi.csproj", "{D704E3D3-E125-4945-A78D-D8CD98C11DAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{1724D987-FB09-4D6A-8D2F-80729AFDC636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1724D987-FB09-4D6A-8D2F-80729AFDC636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1724D987-FB09-4D6A-8D2F-80729AFDC636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D704E3D3-E125-4945-A78D-D8CD98C11DAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D704E3D3-E125-4945-A78D-D8CD98C11DAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D704E3D3-E125-4945-A78D-D8CD98C11DAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D704E3D3-E125-4945-A78D-D8CD98C11DAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

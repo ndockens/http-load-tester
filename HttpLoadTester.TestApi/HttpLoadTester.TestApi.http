@@ -1,0 +1,6 @@
+@HttpLoadTester.TestApi_HostAddress = http://localhost:5190
+
+GET {{HttpLoadTester.TestApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
