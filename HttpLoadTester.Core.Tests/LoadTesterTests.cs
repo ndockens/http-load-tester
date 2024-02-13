@@ -2,7 +2,7 @@ using System.Net;
 
 namespace HttpLoadTester.Tests.Integration;
 
-public class CoreTests
+public class LoadTesterTests
 {
     private static readonly string testApiBaseUri = "http://localhost:5190";
     private static readonly string weatherForecastUri = $"{testApiBaseUri}/weatherforecast";

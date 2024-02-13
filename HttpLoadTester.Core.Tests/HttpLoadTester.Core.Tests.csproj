@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HttpLoadTester\HttpLoadTester.csproj" />
+    <ProjectReference Include="..\HttpLoadTester.Core\HttpLoadTester.Core.csproj" />
   </ItemGroup>
 
 </Project>
