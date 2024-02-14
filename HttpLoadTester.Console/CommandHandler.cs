@@ -55,7 +55,7 @@ public class CommandHandler
         if (args.Length < 2)
             return 1;
 
-        var numberOfRequestsString = args[1]?.Split("=")?[1] ?? "-1";
+        var numberOfRequestsString = args[1].Split("=")[1];
         var numberOfRequests = int.Parse(numberOfRequestsString);
 
         return numberOfRequests;

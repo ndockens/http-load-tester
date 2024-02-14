@@ -6,14 +6,35 @@ namespace HttpLoadTester.Console;
 
 internal class Program
 {
+    private static IHttpService? httpService;
+    private static ILoadTester? loadTester;
+    private static CommandHandler? commandHandler; // TODO: Create an interface for CommandHandler
+    private static string resultMessage = "";
+
     public static async Task Main(string[] args)
     {
-        var httpService = new HttpService();
-        var loadTester = new LoadTester(httpService);
-        var commandHandler = new CommandHandler(loadTester);
+        Setup();
+        await Run(args);
+        WriteOutput();
+    }
 
-        string resultMessage = await commandHandler.Process(args);
+    private static void Setup()
+    {
+        httpService = new HttpService();
+        loadTester = new LoadTester(httpService);
+        commandHandler = new CommandHandler(loadTester);
+    }
 
+    private static async Task Run(string[] args)
+    {
+        if (commandHandler == null)
+            return;
+
+        resultMessage = await commandHandler.Process(args);
+    }
+
+    private static void WriteOutput()
+    {
         System.Console.WriteLine(resultMessage);
     }
 }
