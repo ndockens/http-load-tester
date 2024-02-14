@@ -6,6 +6,8 @@ namespace HttpLoadTester;
 public class CommandHandler
 {
     private readonly ILoadTester loadTester;
+    private string uri = "";
+    private int numberOfRequests = 0;
 
     public CommandHandler(ILoadTester loadTester)
     {
@@ -14,13 +16,11 @@ public class CommandHandler
 
     public async Task<string> Process(string[] args)
     {
-        if (args.Length == 0)
-            throw new ArgumentException("Cannot be an empty array.", nameof(args));
+        ThrowExceptionIfEmpty(args);
 
         var resultMessageBuilder = new StringBuilder();
 
-        var uri = args[0].Split("=")[1];
-        var numberOfRequests = ParseNumberOfRequests(args);
+        ParseArguments(args);
         List<HttpStatusCode> results = await loadTester.SendGet(uri, numberOfRequests);
 
         for (int i = 0; i < results.Count; i++)
@@ -29,6 +29,25 @@ public class CommandHandler
         }
 
         return resultMessageBuilder.ToString();
+    }
+
+    private void ThrowExceptionIfEmpty(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            throw new ArgumentException("Cannot be an empty array.", nameof(args));
+        }
+    }
+
+    private void ParseArguments(string[] args)
+    {
+        uri = ParseUri(args);
+        numberOfRequests = ParseNumberOfRequests(args);
+    }
+
+    private string ParseUri(string[] args)
+    {
+        return args[0].Split("=")[1];
     }
 
     private int ParseNumberOfRequests(string[] args)
