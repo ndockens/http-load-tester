@@ -1,44 +1,78 @@
 using System.Net;
 using NSubstitute;
 
-namespace HttpLoadTester.Tests.Integration;
+namespace HttpLoadTester.Console.Tests;
 
 public class CommandHandlerTests
 {
     private readonly string testUri = "http://www.test.com";
-    private ILoadTester loadTester;
-    private CommandHandler commandHandler;
+    private readonly ILoadTester loadTester;
+    private readonly CommandHandler commandHandler;
 
-    private void InitializeLoadTester()
+    public CommandHandlerTests()
     {
         loadTester = Substitute.For<ILoadTester>();
-    }
-
-    private void InitializeCommandHandler()
-    {
         commandHandler = new CommandHandler(loadTester);
     }
 
-    [Fact]
-    public async void Process_GetCommandWithUriArgument_InvokesLoadTesterToSendGetRequestToUri()
+    private void SetLoadTesterReturnValue(string methodName, List<HttpStatusCode> returnValue)
     {
-        InitializeLoadTester();
-        InitializeCommandHandler();
-
-        await commandHandler.Process([$"-Uri={testUri}"]);
-
-        await loadTester.Received().SendGet(testUri);
+        if (methodName == "SendGet")
+        {
+            loadTester.SendGet(Arg.Any<string>(), Arg.Any<int>()).Returns(returnValue);
+        }
     }
 
     [Fact]
-    public async void Process_GetCommandWithUriArgument_ReturnsResponseCodeMessage()
+    public async void Process_NoArguments_ThrowsArgumentExceptionWithParameterName()
     {
-        InitializeLoadTester();
-        loadTester.SendGet(testUri).Returns(HttpStatusCode.OK);
-        InitializeCommandHandler();
+        var parameterName = "args";
+        await Assert.ThrowsAsync<ArgumentException>(parameterName, () => commandHandler.Process([]));
+    }
 
-        string resultMessage = await commandHandler.Process([$"-Uri={testUri}"]);
+    [Fact]
+    public async void Process_ArgumentsContainUri_InvokesLoadTesterToSendGetRequestToUri()
+    {
+        SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK]);
+        string[] arguments = [$"-Uri={testUri}"];
 
-        Assert.Equal($"Response code: {HttpStatusCode.OK}", resultMessage);
+        await commandHandler.Process(arguments);
+
+        await loadTester.Received(1).SendGet(testUri, 1);
+    }
+
+    [Fact]
+    public async void Process_ArgumentsContainUri_ReturnsResponseCodeMessage()
+    {
+        SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK]);
+        string[] arguments = [$"-Uri={testUri}"];
+        var expectedResultMessage = "Request #1 - Response Status: OK\n";
+
+        string resultMessage = await commandHandler.Process(arguments);
+
+        Assert.Equal(expectedResultMessage, resultMessage);
+    }
+
+    [Fact]
+    public async void Process_ArgumentsContainUriAndNumberOfRequestsEqualTo2_InvokesLoadTesterToSendTwoGetRequestsToUri()
+    {
+        SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK, HttpStatusCode.OK]);
+        string[] arguments = [$"-Uri={testUri}", "-Number=2"];
+
+        await commandHandler.Process(arguments);
+
+        await loadTester.Received(1).SendGet(testUri, 2);
+    }
+
+    [Fact]
+    public async void Process_ArgumentsContainUriAndNumberOfRequestsEqualTo2_ReturnsResponseStatusMessagesForTwoRequests()
+    {
+        SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK, HttpStatusCode.OK]);
+        string[] arguments = [$"-Uri={testUri}", "-Number=2"];
+        var expectedResultMessage = "Request #1 - Response Status: OK\nRequest #2 - Response Status: OK\n";
+
+        string resultMessage = await commandHandler.Process(arguments);
+
+        Assert.Equal(expectedResultMessage, resultMessage);
     }
 }

@@ -1,30 +1,46 @@
 using System.Net;
+using HttpLoadTester.Core;
+using NSubstitute;
 
 namespace HttpLoadTester.Tests.Integration;
 
 public class LoadTesterTests
 {
-    private static readonly string testApiBaseUri = "http://localhost:5190";
-    private static readonly string weatherForecastUri = $"{testApiBaseUri}/weatherforecast";
-    private static readonly string invalidUri = $"{testApiBaseUri}/invalid";
+    private readonly string testUri = "http://www.test.com";
+    private readonly IHttpService httpService;
+    private readonly LoadTester loadTester;
 
-    [Fact]
-    public async void LoadTester_SendGetRequest_ReturnsOkResponse()
+    public LoadTesterTests()
     {
-        var loadTester = new LoadTester();
+        httpService = Substitute.For<IHttpService>();
+        loadTester = new LoadTester(httpService);
+    }
 
-        HttpStatusCode responseCode = await loadTester.SendGet(weatherForecastUri);
-
-        Assert.Equal(HttpStatusCode.OK, responseCode);
+    private void SetUpHttpServiceToAlwaysReturnOk()
+    {
+        httpService.Get(Arg.Any<string>()).Returns(new HttpResponseMessage(HttpStatusCode.OK));
     }
 
     [Fact]
-    public async void LoadTester_SendGetRequestToInvalidUri_ReturnsNotFoundResponse()
+    public async void LoadTester_SendOneGetRequest_ReturnsOkResponse()
     {
-        var loadTester = new LoadTester();
+        SetUpHttpServiceToAlwaysReturnOk();
 
-        HttpStatusCode responseCode = await loadTester.SendGet(invalidUri);
+        List<HttpStatusCode> responseCodes = await loadTester.SendGet(testUri, 1);
 
-        Assert.Equal(HttpStatusCode.NotFound, responseCode);
+        Assert.Single(responseCodes);
+        Assert.Equal(HttpStatusCode.OK, responseCodes[0]);
+    }
+
+    [Fact]
+    public async void LoadTester_SendTwoGetRequests_ReturnsTwoOkResponses()
+    {
+        SetUpHttpServiceToAlwaysReturnOk();
+
+        List<HttpStatusCode> responseCodes = await loadTester.SendGet(testUri, 2);
+
+        Assert.Equal(2, responseCodes.Count);
+        Assert.Equal(HttpStatusCode.OK, responseCodes[0]);
+        Assert.Equal(HttpStatusCode.OK, responseCodes[1]);
     }
 }
