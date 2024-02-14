@@ -25,7 +25,7 @@ public class CommandHandlerTests
         InitializeLoadTester();
         InitializeCommandHandler();
 
-        await commandHandler.Process([testUri]);
+        await commandHandler.Process([$"-Uri={testUri}"]);
 
         await loadTester.Received().SendGet(testUri);
     }
@@ -37,7 +37,7 @@ public class CommandHandlerTests
         loadTester.SendGet(testUri).Returns(HttpStatusCode.OK);
         InitializeCommandHandler();
 
-        string resultMessage = await commandHandler.Process([testUri]);
+        string resultMessage = await commandHandler.Process([$"-Uri={testUri}"]);
 
         Assert.Equal($"Response code: {HttpStatusCode.OK}", resultMessage);
     }

@@ -13,7 +13,7 @@ public class CommandHandler
 
     public async Task<string> Process(string[] args)
     {
-        var uri = args[0];
+        var uri = args[0].Split("=")[1].Trim();
         HttpStatusCode responseCode = await loadTester.SendGet(uri);
         return $"Response code: {responseCode}";
     }

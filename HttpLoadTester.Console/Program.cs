@@ -1,8 +1,17 @@
-﻿using HttpLoadTester;
+﻿using System.Runtime.CompilerServices;
 
-var loadTester = new LoadTester();
-var commandHandler = new CommandHandler(loadTester);
+[assembly: InternalsVisibleTo("HttpLoadTester.Console.Tests")]
+namespace HttpLoadTester.Console;
 
-string resultMessage = await commandHandler.Process(args);
+internal class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var loadTester = new LoadTester();
+        var commandHandler = new CommandHandler(loadTester);
 
-Console.WriteLine(resultMessage);
+        string resultMessage = await commandHandler.Process(args);
+
+        System.Console.WriteLine(resultMessage);
+    }
+}
