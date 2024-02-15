@@ -2,7 +2,7 @@ using System.Net;
 using HttpLoadTester.Core;
 using NSubstitute;
 
-namespace HttpLoadTester.Tests.Integration;
+namespace HttpLoadTester.Tests.Integration.Unit;
 
 public class LoadTesterTests
 {
@@ -22,7 +22,7 @@ public class LoadTesterTests
     }
 
     [Fact]
-    public async void LoadTester_SendOneGetRequest_ReturnsOkResponse()
+    public async void SendGet_OneRequest_ReturnsOkResponse()
     {
         SetUpHttpServiceToAlwaysReturnOk();
 
@@ -33,7 +33,7 @@ public class LoadTesterTests
     }
 
     [Fact]
-    public async void LoadTester_SendTwoGetRequests_ReturnsTwoOkResponses()
+    public async void SendGet_TwoRequests_ReturnsTwoOkResponses()
     {
         SetUpHttpServiceToAlwaysReturnOk();
 

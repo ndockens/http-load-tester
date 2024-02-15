@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace HttpLoadTester.Core.Tests;
+namespace HttpLoadTester.Core.Tests.Integration;
 
 public class HttpServiceTests
 {

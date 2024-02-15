@@ -1,14 +1,14 @@
 using System.Text;
 
-namespace HttpLoadTester.Console.Tests;
+namespace HttpLoadTester.Console.Tests.Integration;
 
-public class IntegrationTests
+public class ProgramTests
 {
     private static readonly string testApiBaseUri = "http://localhost:5190";
     private static readonly string weatherForecastUri = $"{testApiBaseUri}/weatherforecast";
 
     [Fact]
-    public async void ConsoleApp_UserEntersUri_PrintsOkResponseMessage()
+    public async void Main_UserEntersUri_PrintsOkResponseMessage()
     {
         var consoleOutput = new StringBuilder();
         var consoleOutputWriter = new StringWriter(consoleOutput);
@@ -20,7 +20,7 @@ public class IntegrationTests
     }
 
     [Fact]
-    public async void ConsoleApp_UserEntersUriAndSpecifiesTwoRequests_PrintsTwoOkResponseMessages()
+    public async void Main_UserEntersUriAndSpecifiesTwoRequests_PrintsTwoOkResponseMessages()
     {
         var consoleOutput = new StringBuilder();
         var consoleOutputWriter = new StringWriter(consoleOutput);

@@ -1,7 +1,7 @@
 using System.Net;
 using NSubstitute;
 
-namespace HttpLoadTester.Console.Tests;
+namespace HttpLoadTester.Console.Tests.Unit;
 
 public class CommandHandlerTests
 {
