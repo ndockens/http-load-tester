@@ -5,6 +5,7 @@ namespace HttpLoadTester;
 
 public class CommandHandler
 {
+    private readonly int defaultNumberOfRequests = 1;
     private readonly ILoadTester loadTester;
     private string uri = "";
     private int numberOfRequests = 0;
@@ -41,23 +42,33 @@ public class CommandHandler
 
     private void ParseArguments(string[] args)
     {
-        uri = ParseUri(args);
-        numberOfRequests = ParseNumberOfRequests(args);
+        ParseUri(args);
+        ParseNumberOfRequests(args);
     }
 
-    private string ParseUri(string[] args)
+    private void ParseUri(string[] args)
     {
-        return args[0].Split("=")[1];
+        uri = ParseArgumentValue("Uri", args);
     }
 
-    private int ParseNumberOfRequests(string[] args)
+    private void ParseNumberOfRequests(string[] args)
     {
-        if (args.Length < 2)
-            return 1;
+        string numberOfRequestsString = ParseArgumentValue("NumberOfRequests", args);
+        int.TryParse(numberOfRequestsString, out numberOfRequests);
 
-        var numberOfRequestsString = args[1].Split("=")[1];
-        var numberOfRequests = int.Parse(numberOfRequestsString);
+        if (numberOfRequests <= 0)
+            numberOfRequests = defaultNumberOfRequests;
+    }
 
-        return numberOfRequests;
+    private string ParseArgumentValue(string argumentName, string[] args)
+    {
+        string? argument = args.FirstOrDefault(x => x.StartsWith($"-{argumentName}="));
+
+        if (string.IsNullOrEmpty(argument))
+            return "";
+
+        string argumentValue = argument.Split("=")[1];
+
+        return argumentValue;
     }
 }

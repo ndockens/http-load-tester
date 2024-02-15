@@ -42,7 +42,7 @@ public class CommandHandlerTests
     }
 
     [Fact]
-    public async void Process_ArgumentsContainUri_ReturnsResponseCodeMessage()
+    public async void Process_ArgumentsContainUri_ReturnsResponseStatusMessage()
     {
         SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK]);
         string[] arguments = [$"-Uri={testUri}"];
@@ -57,7 +57,7 @@ public class CommandHandlerTests
     public async void Process_ArgumentsContainUriAndNumberOfRequestsEqualTo2_InvokesLoadTesterToSendTwoGetRequestsToUri()
     {
         SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK, HttpStatusCode.OK]);
-        string[] arguments = [$"-Uri={testUri}", "-Number=2"];
+        string[] arguments = [$"-Uri={testUri}", "-NumberOfRequests=2"];
 
         await commandHandler.Process(arguments);
 
@@ -68,11 +68,22 @@ public class CommandHandlerTests
     public async void Process_ArgumentsContainUriAndNumberOfRequestsEqualTo2_ReturnsResponseStatusMessagesForTwoRequests()
     {
         SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK, HttpStatusCode.OK]);
-        string[] arguments = [$"-Uri={testUri}", "-Number=2"];
+        string[] arguments = [$"-Uri={testUri}", "-NumberOfRequests=2"];
         var expectedResultMessage = "Request #1 - Response Status: OK\nRequest #2 - Response Status: OK\n";
 
         string resultMessage = await commandHandler.Process(arguments);
 
         Assert.Equal(expectedResultMessage, resultMessage);
+    }
+
+    [Fact]
+    public async void Process_ArgumentsAreOutOfOrder_InvokesLoadTesterToSendGetRequestToUri()
+    {
+        SetLoadTesterReturnValue("SendGet", [HttpStatusCode.OK]);
+        string[] arguments = ["-NumberOfRequests=1", $"-Uri={testUri}"];
+
+        await commandHandler.Process(arguments);
+
+        await loadTester.Received(1).SendGet(testUri, 1);
     }
 }
