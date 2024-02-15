@@ -4,5 +4,5 @@ namespace HttpLoadTester;
 
 public interface ILoadTester
 {
-    public Task<HttpStatusCode> SendGet(string uri);
+    public Task<List<HttpStatusCode>> SendGet(string uri, int numberOfRequests);
 }

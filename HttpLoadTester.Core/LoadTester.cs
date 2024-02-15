@@ -1,13 +1,26 @@
 using System.Net;
 
-namespace HttpLoadTester;
+namespace HttpLoadTester.Core;
 
 public class LoadTester : ILoadTester
 {
-    public async Task<HttpStatusCode> SendGet(string uri)
+    private readonly IHttpService httpService;
+
+    public LoadTester(IHttpService httpService)
     {
-        var client = new HttpClient();
-        var response = await client.GetAsync(uri);
-        return response.StatusCode;
+        this.httpService = httpService;
+    }
+
+    public async Task<List<HttpStatusCode>> SendGet(string uri, int numberOfRequests)
+    {
+        var responseStatusCodes = new List<HttpStatusCode>();
+
+        for (int i = 0; i < numberOfRequests; i++)
+        {
+            HttpResponseMessage response = await httpService.Get(uri);
+            responseStatusCodes.Add(response.StatusCode);
+        }
+
+        return responseStatusCodes;
     }
 }
